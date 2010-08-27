@@ -7,12 +7,21 @@
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
-	QVBoxLayout *layout = new QVBoxLayout(this);
-	BusyIndicator *busyIndicator = new BusyIndicator(this);
-	layout->addWidget(busyIndicator);
+	QGridLayout *layout = new QGridLayout(this);
+	for (int i = 0; i < 10; i++)
+		for (int j = 0; j < 10; j++)
+			layout->addWidget(new BusyIndicator, i, j );
 
-	//QLabel *label = new QLabel("WTF?", this);
-	//layout->addWidget(label);
+
+	QLinearGradient grad(0, 0, width(), height());
+	grad.setColorAt(0, Qt::red);
+	grad.setColorAt(1, Qt::yellow);
+	//grad.setCoordinateMode(QGradient::LogicalMode);
+	QBrush brush(grad);
+	QPalette pal = palette();
+	pal.setBrush(QPalette::Background, brush);
+	setPalette(pal);
+
 }
 
 Widget::~Widget()
