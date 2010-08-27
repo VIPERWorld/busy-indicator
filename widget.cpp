@@ -16,10 +16,8 @@ Widget::Widget(QWidget *parent)
 	QLinearGradient grad(0, 0, width(), height());
 	grad.setColorAt(0, Qt::red);
 	grad.setColorAt(1, Qt::yellow);
-	//grad.setCoordinateMode(QGradient::LogicalMode);
-	QBrush brush(grad);
 	QPalette pal = palette();
-	pal.setBrush(QPalette::Background, brush);
+	pal.setBrush(QPalette::Background, QBrush(grad));
 	setPalette(pal);
 
 }
