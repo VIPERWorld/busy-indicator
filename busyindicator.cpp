@@ -8,8 +8,10 @@ BusyIndicator::BusyIndicator(QWidget *parent) :
 	QWidget(parent),
 	startAngle(0)
 {
-	setBackgroundRole(QPalette::Base);
-	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+	policy.setHeightForWidth(true);
+	setSizePolicy(policy);
+
 	timer.setInterval(50);
 	connect(&timer, SIGNAL(timeout()), this, SLOT(rotate()));
 	timer.start();
@@ -61,7 +63,6 @@ void BusyIndicator::paintEvent(QPaintEvent *)
 						  .arg(width())
 						  .arg(height())
 						  .arg(startAngle);
-	qDebug() << key;
 
 	QPixmap pixmap;
 	QPainter painter(this);
@@ -79,3 +80,12 @@ void BusyIndicator::paintEvent(QPaintEvent *)
 	painter.drawPixmap(0, 0, side, side, pixmap);
 }
 
+QSize BusyIndicator::minimumSizeHint() const
+{
+	return QSize(20, 20);
+}
+
+QSize BusyIndicator::sizeHint() const
+{
+	return QSize(30, 30);
+}

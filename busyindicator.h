@@ -11,6 +11,8 @@ public:
 	explicit BusyIndicator(QWidget *parent = 0);
 
 	void paintEvent(QPaintEvent *);
+	QSize minimumSizeHint() const;
+	QSize sizeHint() const;
 
 signals:
 
