@@ -18,7 +18,7 @@ private slots:
 	void rotate();
 
 private:
-	QPixmap generatePixmap();
+	QPixmap generatePixmap(int sideLength);
 	QTimer timer;
 	int startAngle;
 };

@@ -9,6 +9,9 @@ int main(int argc, char *argv[])
    // w.show();
 
 	BusyIndicator b;
+	QPalette pal = b.palette();
+	pal.setColor(QPalette::Background, Qt::darkYellow);
+	b.setPalette(pal);
 	b.show();
 
     return a.exec();
