@@ -10,7 +10,7 @@ BusyIndicator::BusyIndicator(QWidget *parent) :
 {
 	setBackgroundRole(QPalette::Base);
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	timer.setInterval(100);
+	timer.setInterval(50);
 	connect(&timer, SIGNAL(timeout()), this, SLOT(rotate()));
 	timer.start();
 }
@@ -26,10 +26,10 @@ QPixmap BusyIndicator::generatePixmap(int side)
 {
 	qDebug() << "generate";
 	QPixmap pixmap(QSize(side, side));
+	pixmap.fill(QColor(255, 255, 255, 0));
 
 	QPainter painter(&pixmap);
 	painter.setRenderHint(QPainter::Antialiasing);
-	painter.fillRect(0, 0, side, side, palette().color(QPalette::Background));
 
 	painter.translate(side / 2, side / 2);
 	painter.scale(side / 200.0, side / 200.0);
@@ -37,6 +37,8 @@ QPixmap BusyIndicator::generatePixmap(int side)
 	QColor color = palette().color(QPalette::Foreground);
 	QBrush brush(color);
 	painter.setPen(Qt::NoPen);
+
+	painter.rotate(startAngle);
 
 	float angle = 0;
 	while (angle < 360) {
@@ -54,10 +56,11 @@ QPixmap BusyIndicator::generatePixmap(int side)
 
 void BusyIndicator::paintEvent(QPaintEvent *)
 {
-	QString key = QString("%1:%2:%3")
+	QString key = QString("%1:%2:%3:%4")
 						  .arg(metaObject()->className())
 						  .arg(width())
-						  .arg(height());
+						  .arg(height())
+						  .arg(startAngle);
 	qDebug() << key;
 
 	QPixmap pixmap;
@@ -71,10 +74,7 @@ void BusyIndicator::paintEvent(QPaintEvent *)
 		QPixmapCache::insert(key, pixmap);
 	}
 
-	/* we rotate around the center of the generated pixmap square */
-	painter.translate(width() / 2, height() / 2);
-	painter.rotate(startAngle);
-	painter.translate(-side / 2, -side / 2);
+	painter.translate(width() / 2 - side / 2, height() / 2 - side / 2);
 
 	painter.drawPixmap(0, 0, side, side, pixmap);
 }
