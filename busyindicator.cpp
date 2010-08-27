@@ -3,10 +3,12 @@
 #include <QDebug>
 #include <QPainter>
 #include <QPixmapCache>
+#include <QGradient>
 
 BusyIndicator::BusyIndicator(QWidget *parent) :
 	QWidget(parent),
-	startAngle(0)
+	startAngle(0),
+	m_style(StyleArc)
 {
 	QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 	policy.setHeightForWidth(true);
@@ -24,6 +26,18 @@ void BusyIndicator::rotate()
 	update();
 }
 
+void BusyIndicator::setIndicatorStyle(IndicatorStyle style)
+{
+	m_style = style;
+	update();
+}
+
+const BusyIndicator::IndicatorStyle BusyIndicator::indicatorStyle() const
+{
+	return m_style;
+}
+
+
 QPixmap BusyIndicator::generatePixmap(int side)
 {
 	qDebug() << "generate";
@@ -36,33 +50,88 @@ QPixmap BusyIndicator::generatePixmap(int side)
 	painter.translate(side / 2, side / 2);
 	painter.scale(side / 200.0, side / 200.0);
 
-	QColor color = palette().color(QPalette::Foreground);
-	QBrush brush(color);
-	painter.setPen(Qt::NoPen);
+	switch (m_style) {
+	case StyleRect:
+		drawRectStyle(&painter);
+		break;
+	case StyleEllipse:
+		drawEllipseStyle(&painter);
+		break;
+	case StyleArc:
+		drawArcStyle(&painter);
+		break;
+	}
+	return pixmap;
+}
 
-	painter.rotate(startAngle);
+void BusyIndicator::drawRectStyle(QPainter *painter)
+{
+	QColor color = palette().color(QPalette::WindowText);
+	QBrush brush(color);
+	painter->setPen(Qt::NoPen);
+
+	painter->rotate(startAngle);
 
 	float angle = 0;
 	while (angle < 360) {
-		painter.setBrush(brush);
-		painter.drawRect(-5, -100, 10, 30);
-		painter.rotate(20);
+		painter->setBrush(brush);
+		painter->drawRect(-5, -100, 10, 30);
+
+		painter->rotate(20);
 		angle += 20;
 
 		color.setAlphaF(angle / 360);
 		brush.setColor(color);
 	}
+}
 
-	return pixmap;
+void BusyIndicator::drawEllipseStyle(QPainter *painter)
+{
+	QColor color = palette().color(QPalette::WindowText);
+	QBrush brush(color);
+	painter->setPen(Qt::NoPen);
+
+	painter->rotate(startAngle);
+
+	float angle = 0;
+	while (angle < 360) {
+		painter->setBrush(brush);
+		painter->drawEllipse(-10, -100, 20, 20);
+
+		painter->rotate(20);
+		angle += 20;
+
+		color.setAlphaF(angle / 360);
+		brush.setColor(color);
+	}
+}
+
+void BusyIndicator::drawArcStyle(QPainter *painter)
+{
+	QColor color = palette().color(QPalette::WindowText);
+	QConicalGradient gradient(0, 0, -startAngle);
+	gradient.setColorAt(0, color);
+	color.setAlpha(0);
+	gradient.setColorAt(0.8, color);
+	color.setAlpha(255);
+	gradient.setColorAt(1, color);
+
+	QPen pen;
+	pen.setWidth(30);
+	pen.setBrush(QBrush(gradient));
+	painter->setPen(pen);
+
+	painter->drawArc(-85, -85, 170, 170, 0 * 16, 360 * 16);
 }
 
 void BusyIndicator::paintEvent(QPaintEvent *)
 {
-	QString key = QString("%1:%2:%3:%4")
+	QString key = QString("%1:%2:%3:%4:%5")
 						  .arg(metaObject()->className())
 						  .arg(width())
 						  .arg(height())
-						  .arg(startAngle);
+						  .arg(startAngle)
+						  .arg(m_style);
 
 	QPixmap pixmap;
 	QPainter painter(this);

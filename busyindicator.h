@@ -8,11 +8,16 @@ class BusyIndicator : public QWidget
 {
     Q_OBJECT
 public:
+	enum IndicatorStyle{StyleRect, StyleEllipse, StyleArc};
+
 	explicit BusyIndicator(QWidget *parent = 0);
 
 	void paintEvent(QPaintEvent *);
 	QSize minimumSizeHint() const;
 	QSize sizeHint() const;
+
+	void setIndicatorStyle(IndicatorStyle);
+	const IndicatorStyle indicatorStyle() const;
 
 signals:
 
@@ -21,8 +26,14 @@ private slots:
 
 private:
 	QPixmap generatePixmap(int sideLength);
+	void drawRectStyle(QPainter *painter);
+	void drawEllipseStyle(QPainter *painter);
+	void drawArcStyle(QPainter *painter);
+
 	QTimer timer;
 	int startAngle;
+
+	IndicatorStyle m_style;
 };
 
 #endif // BUSYINDICATOR_H

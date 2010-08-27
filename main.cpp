@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 	Widget w;
 	w.show();
 
-	//BusyIndicator b;
+	BusyIndicator b;
 	//b.show();
 
     return a.exec();

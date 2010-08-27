@@ -8,9 +8,18 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
 	QGridLayout *layout = new QGridLayout(this);
-	for (int i = 0; i < 10; i++)
-		for (int j = 0; j < 10; j++)
-			layout->addWidget(new BusyIndicator, i, j );
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++) {
+			BusyIndicator *ind = new BusyIndicator(this);
+			if (i % 3 == 0)
+				ind->setIndicatorStyle(BusyIndicator::StyleRect);
+			else if (i % 3 == 1)
+				ind->setIndicatorStyle(BusyIndicator::StyleEllipse);
+			else
+				ind->setIndicatorStyle(BusyIndicator::StyleArc);
+			layout->addWidget(ind, i, j );
+		}
+	}
 
 
 	QLinearGradient grad(0, 0, width(), height());
