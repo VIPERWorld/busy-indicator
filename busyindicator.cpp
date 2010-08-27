@@ -21,7 +21,7 @@ BusyIndicator::BusyIndicator(QWidget *parent) :
 
 void BusyIndicator::rotate()
 {
-	startAngle += 20;
+	startAngle += 30;
 	startAngle %= 360;
 	update();
 }
@@ -40,7 +40,6 @@ const BusyIndicator::IndicatorStyle BusyIndicator::indicatorStyle() const
 
 QPixmap BusyIndicator::generatePixmap(int side)
 {
-	qDebug() << "generate";
 	QPixmap pixmap(QSize(side, side));
 	pixmap.fill(QColor(255, 255, 255, 0));
 
@@ -75,10 +74,10 @@ void BusyIndicator::drawRectStyle(QPainter *painter)
 	float angle = 0;
 	while (angle < 360) {
 		painter->setBrush(brush);
-		painter->drawRect(-5, -100, 10, 30);
+		painter->drawRect(-8, -100, 16, 35);
 
-		painter->rotate(20);
-		angle += 20;
+		painter->rotate(30);
+		angle += 30;
 
 		color.setAlphaF(angle / 360);
 		brush.setColor(color);
@@ -96,10 +95,10 @@ void BusyIndicator::drawEllipseStyle(QPainter *painter)
 	float angle = 0;
 	while (angle < 360) {
 		painter->setBrush(brush);
-		painter->drawEllipse(-10, -100, 20, 20);
+		painter->drawEllipse(-10, -100, 30, 30);
 
-		painter->rotate(20);
-		angle += 20;
+		painter->rotate(30);
+		angle += 30;
 
 		color.setAlphaF(angle / 360);
 		brush.setColor(color);

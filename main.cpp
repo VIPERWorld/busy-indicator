@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
 	w.show();
 
 	BusyIndicator b;
+	b.setIndicatorStyle(BusyIndicator::StyleRect);
 	//b.show();
 
     return a.exec();
