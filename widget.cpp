@@ -22,8 +22,8 @@ Widget::Widget(QWidget *parent)
     }
 
     QLinearGradient grad(0, 0, width(), height());
-    grad.setColorAt(0, Qt::red);
-    grad.setColorAt(1, Qt::yellow);
+    grad.setColorAt(0, Qt::white);
+    grad.setColorAt(1, Qt::gray);
     QPalette pal = palette();
     pal.setBrush(QPalette::Background, QBrush(grad));
     setPalette(pal);
